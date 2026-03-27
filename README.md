@@ -5,8 +5,8 @@ En este repositorio se presentarán los avances del grupo 04, cuyos integrantes 
 - Jaime Guzmán - 202373524-8
 - Bastián Rios - 202351551-5
 - Martin Pardo - 202304574-8
-- **Ayudante tutor:** Maximiliano Tapia
-- **Profesor/a:** Luz Chourio
+- **Ayudante tutor:** Carlos Arévalo
+- **Profesores:** Anelis Pereira - Ricardo Salas
 ---
 ### Wiki
 Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/JaimeYi/GRUPO04-2025-PROYINF/wiki).

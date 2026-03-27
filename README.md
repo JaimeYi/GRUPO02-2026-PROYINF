@@ -5,6 +5,7 @@ En este repositorio se presentarán los avances del grupo 04, cuyos integrantes 
 - Jaime Guzmán - 202373524-8
 - Bastián Rios - 202351551-5
 - Martin Pardo - 202304574-8
+- Héctor Chanampe - 202304613-2
 - **Ayudante tutor:** Carlos Arévalo
 - **Profesores:** Anelis Pereira - Ricardo Salas
 ---

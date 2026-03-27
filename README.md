@@ -6,6 +6,7 @@ En este repositorio se presentarán los avances del grupo 04, cuyos integrantes 
 - Bastián Rios - 202351551-5
 - Martin Pardo - 202304574-8
 - Héctor Chanampe - 202304613-2
+- Cristobal Barahona - 202373545-0
 - **Ayudante tutor:** Carlos Arévalo
 - **Profesores:** Anelis Pereira - Ricardo Salas
 ---

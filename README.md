@@ -1,7 +1,7 @@
-# INF263-GRUPO-04
+# INF225-GRUPO-02
 
 ### Integrantes
-En este repositorio se presentarán los avances del grupo 04, cuyos integrantes son:
+En este repositorio se presentarán los avances del grupo 02, cuyos integrantes son:
 - Jaime Guzmán - 202373524-8
 - Bastián Rios - 202351551-5
 - Martin Pardo - 202304574-8
@@ -11,7 +11,7 @@ En este repositorio se presentarán los avances del grupo 04, cuyos integrantes 
 - **Profesores:** Anelis Pereira - Ricardo Salas
 ---
 ### Wiki
-Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/JaimeYi/GRUPO04-2025-PROYINF/wiki).
+Puede acceder a la Wiki mediante el siguiente [enlace](https://github.com/JaimeYi/GRUPO02-2026-PROYINF/wiki).
 
 ### Levantamiento del proyecto
 Para obtener más información sobre como levantar el proyecto de manera local por favor dirigirse a la carpeta `Proyecto`

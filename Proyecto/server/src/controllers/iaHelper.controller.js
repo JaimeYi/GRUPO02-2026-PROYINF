@@ -1,24 +1,28 @@
-const {iaCall, iaValidation} = require("../services/iaHelper.service")
-const {promptDoc, promptValidation} = require("../config/iaHelper.config")
+const {iaCall} = require("../services/iaHelper.service")
+const {promptDoc} = require("../config/iaHelper.config")
 
 getSalaryPDF = (async (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: "Falta el archivo PDF." });
     }
 
-    const aiCallResult = await iaCall(req, promptDoc);
+    let aiCallResult = await iaCall(req, promptDoc);
 
     if (aiCallResult === -1){
-        res.status(500).json({error: "Error al analizar PDF."});
+        return res.status(500).json({error: "Error al analizar PDF."});
     }
 
-    const aiValidationResult = await iaValidation(req, promptValidation, aiCallResult);
-
-    if (aiValidationResult === -1){
-        res.status(500).json({error: "Error al realizar la validación."});
+    try {
+        // En caso de que Gemini devuelva backticks de markdown (ej: ```json ... ```), los limpiamos
+        const cleanedResult = aiCallResult.replace(/```json/g, "").replace(/```/g, "").trim();
+        aiCallResult = JSON.parse(cleanedResult);
+        
+        // Retornamos el JSON extraído directamente al cliente
+        return res.json(aiCallResult);
+    } catch (e) {
+        console.error("Error parseando JSON de Gemini:", e);
+        return res.status(500).json({error: "Error al interpretar la respuesta del PDF."});
     }
-
-    res.json({"answer": aiValidationResult});
 })
 
 module.exports = {getSalaryPDF};

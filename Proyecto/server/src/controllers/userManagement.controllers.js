@@ -4,11 +4,21 @@ const {
     loginService,
 } = require("../services/userManagement.service");
 
+// Función para estandarizar el RUT: elimina puntos y formatea siempre como XXXXXXXX-X
+const formatRut = (rut) => {
+    if (!rut) return rut;
+    const clean = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+    if (clean.length < 2) return clean;
+    return clean.slice(0, -1) + '-' + clean.slice(-1);
+};
+
 const guestSessionController = async (req, res) => {
     try {
         const { v4: uuidv4 } = await import("uuid");
         const guestSessionId = uuidv4();
-        const { rut, correo, telefono } = req.body;
+        let { rut, correo, telefono } = req.body;
+        
+        rut = formatRut(rut);
 
         const payload = {
             sessionId: guestSessionId,
@@ -38,6 +48,10 @@ const guestSessionController = async (req, res) => {
 
 const registerController = async (req, res) => {
     const userData = req.body;
+    
+    if (userData.rut) {
+        userData.rut = formatRut(userData.rut);
+    }
 
     const returnRegister = await registerService(userData);
 
@@ -59,7 +73,9 @@ const registerController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
-    const { rut, contrasena } = req.body;
+    let { rut, contrasena } = req.body;
+    
+    rut = formatRut(rut);
 
     const cliente = await loginService(rut, contrasena);
 

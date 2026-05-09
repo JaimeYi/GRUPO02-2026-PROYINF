@@ -2,6 +2,7 @@ import "../css/navbar.css";
 import Logo from "../media/svg/banking-online-web-bank-svgrepo-com.svg";
 import { useAuth } from "./auth";
 import { Link, useLocation } from "react-router-dom";
+import { production } from "../utils/rutVerifier";
 
 function Navbar() {
     const { user, logout, isLoading } = useAuth(); // Usar esta linea en cada vista que se requiera verificar si el usuario esta logeado o no
@@ -23,7 +24,23 @@ function Navbar() {
 
     return (
         <nav className="navbar">
-            {logoLink}
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                {logoLink}
+                {!production && (
+                    <span style={{ 
+                        marginLeft: '15px', 
+                        padding: '4px 10px', 
+                        background: '#ff4444', 
+                        color: 'white', 
+                        borderRadius: '4px',
+                        fontSize: '0.8rem',
+                        fontWeight: 'bold',
+                        letterSpacing: '1px'
+                    }}>
+                        MODO DEBUG
+                    </span>
+                )}
+            </div>
             <ul className="listButtons">
                 {(user === null || user.userType === 'noCliente') ? ( // De esta manera se utiliza el condicional para mostrar cierta opcion dependiendo si el usuario esta logeado o no
                     <>

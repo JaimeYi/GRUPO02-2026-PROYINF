@@ -1,6 +1,7 @@
 const {
     calculateCreditController,
     simulationHistoryController,
+    getSuggestedLoanController,
 } = require("../controllers/simulator.controller.js");
 const { verifyToken } = require("../middleware/verifyToken.js");
 const { Router } = require("express");
@@ -18,6 +19,14 @@ router.get(
     verifyToken,
     async (req, res) => {
         simulationHistoryController(req, res);
+    }
+);
+
+router.get(
+    "/api/simulator/suggestedLoan",
+    verifyToken,
+    async (req, res) => {
+        getSuggestedLoanController(req, res);
     }
 );
 

@@ -43,6 +43,8 @@ export const AuthProvider = ({ children }) => {
         } catch (err) {
             console.error('Error en logout:', err);
         }
+        sessionStorage.removeItem("suggestionShown");
+        localStorage.removeItem("lastSimulation");
         setUser(null);
         navigate('/');
     };

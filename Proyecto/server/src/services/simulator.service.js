@@ -108,4 +108,43 @@ const simulationHistoryService = async (userType, userID) => {
     }
 };
 
-module.exports = { calculateCreditService, simulationHistoryService };
+const getSuggestedLoanService = async (userType, userID) => {
+    try {
+        if (userType === "cliente") {
+            // Primero buscamos en campañas pre-aprobadas
+            const campaniaResult = await pool.query(
+                "SELECT montoPreAprobado as monto, plazoCredito as plazo, seguroDeDegravamen, seguroDeCesantia FROM campania WHERE rutUsuario = $1 LIMIT 1",
+                [userID]
+            );
+
+            if (campaniaResult.rows.length > 0) {
+                return { ...campaniaResult.rows[0], source: "campania" };
+            }
+        }
+
+        // Si no hay campaña o es invitado, buscamos en su última simulación
+        const query = userType === "cliente" 
+            ? "SELECT montoSimulado as monto, plazoCredito as plazo, seguroDeDegravamen, seguroDeCesantia FROM historialsimulacion WHERE rutUsuario = $1 ORDER BY idsimulacion DESC LIMIT 1"
+            : "SELECT montoSimulado as monto, plazoCredito as plazo, seguroDeDegravamen, seguroDeCesantia FROM historialsimulacion WHERE guestID = $1 ORDER BY idsimulacion DESC LIMIT 1";
+        
+        const historyResult = await pool.query(query, [userID]);
+
+        if (historyResult.rows.length > 0) {
+            return { ...historyResult.rows[0], source: "historial" };
+        }
+
+        // Valores por defecto si no hay nada
+        return {
+            monto: 1000000,
+            plazo: 12,
+            seguroDeDegravamen: true,
+            seguroDeCesantia: true,
+            source: "default"
+        };
+    } catch (err) {
+        console.error("Error in getSuggestedLoanService:", err);
+        return null;
+    }
+};
+
+module.exports = { calculateCreditService, simulationHistoryService, getSuggestedLoanService };

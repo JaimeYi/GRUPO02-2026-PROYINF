@@ -46,6 +46,7 @@ function Login() {
             }
 
             setUser(result.user);
+            sessionStorage.removeItem("suggestionShown");
 
             alert(`Inicio de sesión exitoso! Serás redirigido.`);
             navigate("/");

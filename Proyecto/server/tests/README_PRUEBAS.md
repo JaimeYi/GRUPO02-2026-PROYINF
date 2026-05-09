@@ -13,13 +13,13 @@ Pruebas unitarias para el endpoint de cálculo de crédito de consumo.
 
 ## Casos de Prueba
 
-### TC-001: Calcular Crédito - Datos Válidos ✅
+### TC-001: Calcular Crédito - Datos Válidos 
 - **Clase de Equivalencia:** Valores normales
 - **Entrada:** plazoCredito=12, montoSimulacion=500000, ambos seguros=1
 - **Salida Esperada:** Status 200 + JSON con campos de cálculo
 - **Validaciones:** Status, campos presentes, valores positivos, costoSeguros=6000
 
-### TC-002: Rechazar - Campo Faltante ❌
+### TC-002: Rechazar - Campo Faltante 
 - **Clase de Equivalencia:** Valor faltante (frontera)
 - **Entrada:** Sin montoSimulacion (campo obligatorio)
 - **Salida Esperada:** Status 500/400 + mensaje de error
@@ -58,7 +58,7 @@ python -m unittest test_calculate_credit.TestCalculateCredit -v > resultados.txt
 
 ## Resultado Esperado
 
-### Si Todo Funciona ✅
+### Si Todo Funciona 
 ```
 test_tc001_calcular_credito_datos_validos ... ok
 test_tc002_rechazar_dato_incompleto ... ok
@@ -67,7 +67,7 @@ Ran 2 tests in X.XXXs
 OK
 ```
 
-### Si Hay Defectos ❌
+### Si Hay Defectos 
 Las pruebas mostrarán exactamente qué falló:
 - Status code incorrecto
 - Campo faltante

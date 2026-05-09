@@ -3,24 +3,19 @@ const { rate } = require("financial");
 const defaultConfig = require("../config/simulator.config.js");
 
 const calculateCreditService = async (creditData) => {
-    // --- 1. Sanitización de datos de entrada ---
-    // Forzamos a que el monto y el plazo sean números reales
+    // Sanitización de datos de entrada ---
     const monto = Number(creditData.montoSimulacion) || 0;
     const numeroDePeriodos = Number(creditData.plazoCredito) || 1;
 
-    // Evaluamos los seguros de forma segura (si viene true, "true" o 1, será 1, sino 0)
     const valorSeguroCesantia = (creditData.seguroDeCesantia === true || creditData.seguroDeCesantia === "true" || creditData.seguroDeCesantia === 1) ? 1 : 0;
     const valorSeguroDegravamen = (creditData.seguroDeDegravamen === true || creditData.seguroDeDegravamen === "true" || creditData.seguroDeDegravamen === 1) ? 1 : 0;
 
-    // --- 2. Definición de variables internas ---
     const gastosExtras = defaultConfig.gastosExtras;
     const costoPorSeguro = defaultConfig.costoPorSeguro;
     let tasaInteres = defaultConfig.tasaInteres;
 
-    // --- 3. Cálculos ---
     const costoSeguros = (valorSeguroCesantia + valorSeguroDegravamen) * costoPorSeguro;
 
-    // Ahora estamos seguros de que estamos sumando números y no texto
     const principalTotalFinanciado = monto + gastosExtras + costoSeguros;
 
     const cuotaMensual = Math.round(
@@ -35,7 +30,7 @@ const calculateCreditService = async (creditData) => {
     const tasaMensualReal = rate(
         numeroDePeriodos,
         -1 * cuotaMensual,
-        monto, // Reemplazamos creditData.montoSimulacion por nuestra variable sanitizada 'monto'
+        monto,
         0,
         0,
         0.01
@@ -48,10 +43,10 @@ const calculateCreditService = async (creditData) => {
             const result = await pool.query(
                 "INSERT INTO historialSimulacion (montoSimulado, plazoCredito, seguroDeDegravamen, seguroDeCesantia, CTC, cuotaMensual, tasaInteres, CAE, costosSeguros, guestID) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
                 [
-                    monto, // Usar la variable sanitizada
-                    numeroDePeriodos, // Usar la variable sanitizada
-                    valorSeguroDegravamen === 1, // Enviar booleano limpio a Postgres
-                    valorSeguroCesantia === 1, // Enviar booleano limpio a Postgres
+                    monto, // variable sanitizada
+                    numeroDePeriodos, // variable sanitizada
+                    valorSeguroDegravamen === 1,
+                    valorSeguroCesantia === 1,
                     ctc,
                     cuotaMensual,
                     tasaInteres,

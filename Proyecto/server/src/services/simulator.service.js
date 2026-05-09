@@ -3,18 +3,25 @@ const { rate } = require("financial");
 const defaultConfig = require("../config/simulator.config.js");
 
 const calculateCreditService = async (creditData) => {
-    // --- Definicion de variables ---
+    // --- 1. Sanitización de datos de entrada ---
+    // Forzamos a que el monto y el plazo sean números reales
+    const monto = Number(creditData.montoSimulacion) || 0;
+    const numeroDePeriodos = Number(creditData.plazoCredito) || 1;
+
+    // Evaluamos los seguros de forma segura (si viene true, "true" o 1, será 1, sino 0)
+    const valorSeguroCesantia = (creditData.seguroDeCesantia === true || creditData.seguroDeCesantia === "true" || creditData.seguroDeCesantia === 1) ? 1 : 0;
+    const valorSeguroDegravamen = (creditData.seguroDeDegravamen === true || creditData.seguroDeDegravamen === "true" || creditData.seguroDeDegravamen === 1) ? 1 : 0;
+
+    // --- 2. Definición de variables internas ---
     const gastosExtras = defaultConfig.gastosExtras;
     const costoPorSeguro = defaultConfig.costoPorSeguro;
     let tasaInteres = defaultConfig.tasaInteres;
-    const numeroDePeriodos = creditData.plazoCredito;
 
-    const costoSeguros =
-        (creditData.seguroDeCesantia + creditData.seguroDeDegravamen) *
-        costoPorSeguro;
+    // --- 3. Cálculos ---
+    const costoSeguros = (valorSeguroCesantia + valorSeguroDegravamen) * costoPorSeguro;
 
-    const principalTotalFinanciado =
-        creditData.montoSimulacion + gastosExtras + costoSeguros;
+    // Ahora estamos seguros de que estamos sumando números y no texto
+    const principalTotalFinanciado = monto + gastosExtras + costoSeguros;
 
     const cuotaMensual = Math.round(
         (principalTotalFinanciado *
@@ -28,37 +35,23 @@ const calculateCreditService = async (creditData) => {
     const tasaMensualReal = rate(
         numeroDePeriodos,
         -1 * cuotaMensual,
-        creditData.montoSimulacion,
+        monto, // Reemplazamos creditData.montoSimulacion por nuestra variable sanitizada 'monto'
         0,
         0,
         0.01
     );
+    
     let cae = (1 + tasaMensualReal) ** 12 - 1;
+
     try {
         if (creditData.userType === "noCliente") {
             const result = await pool.query(
                 "INSERT INTO historialSimulacion (montoSimulado, plazoCredito, seguroDeDegravamen, seguroDeCesantia, CTC, cuotaMensual, tasaInteres, CAE, costosSeguros, guestID) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
                 [
-                    creditData.montoSimulacion,
-                    numeroDePeriodos,
-                    creditData.seguroDeDegravamen,
-                    creditData.seguroDeCesantia,
-                    ctc,
-                    cuotaMensual,
-                    tasaInteres,
-                    cae,
-                    costoSeguros,
-                    creditData.userID,
-                ]
-            );
-        } else if (creditData.userType === "cliente") {
-            const result = await pool.query(
-                "INSERT INTO historialSimulacion (montoSimulado, plazoCredito, seguroDeDegravamen, seguroDeCesantia, CTC, cuotaMensual, tasaInteres, CAE, costosSeguros, rutUsuario) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
-                [
-                    creditData.montoSimulacion,
-                    numeroDePeriodos,
-                    creditData.seguroDeDegravamen,
-                    creditData.seguroDeCesantia,
+                    monto, // Usar la variable sanitizada
+                    numeroDePeriodos, // Usar la variable sanitizada
+                    valorSeguroDegravamen === 1, // Enviar booleano limpio a Postgres
+                    valorSeguroCesantia === 1, // Enviar booleano limpio a Postgres
                     ctc,
                     cuotaMensual,
                     tasaInteres,

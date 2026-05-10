@@ -7,11 +7,11 @@ from unittest.mock import patch
 class TestCalculateCredit(unittest.TestCase):
     """
     Pruebas unitarias para el endpoint POST /api/simulator/calculateCredit
-    HU Asociada: HU-002 (Simular crédito de consumo)
+    HU Asociada: HU-001 (Simular crédito de consumo)
     
     Casos de prueba:
-    - TC-001: Cálculo exitoso con datos válidos
-    - TC-002: Rechazo por datos incompletos (Validación de campos)
+    - TC-003: Cálculo exitoso con datos válidos
+    - TC-004: Rechazo por datos incompletos (Validación de campos)
     """
     
     @classmethod
@@ -34,9 +34,9 @@ class TestCalculateCredit(unittest.TestCase):
         print(f"Usuario invitado (ID): {cls.guest_user_id}")
         print("="*70 + "\n")
 
-    def test_tc001_calcular_credito_datos_validos(self):
+    def test_tc003_calcular_credito_datos_validos(self):
         """
-        TC-001: Cálculo exitoso con parámetros válidos y completos
+        TC-003: Cálculo exitoso con parámetros válidos y completos
         
         ENTRADA:
         - plazoCredito: 12 (valor normal)
@@ -63,7 +63,7 @@ class TestCalculateCredit(unittest.TestCase):
             "userID": self.guest_user_id
         }
         
-        print("\n>>> TC-001: Calcular crédito con datos válidos")
+        print("\n>>> TC-003: Calcular crédito con datos válidos")
         print(f"Payload enviado:\n{json.dumps(payload, indent=2)}\n")
         
         # Realizar petición POST
@@ -123,15 +123,15 @@ class TestCalculateCredit(unittest.TestCase):
             f"ctc debe ser aproximadamente cuotaMensual × plazo"
         )
         
-        print("    TC-001 PASÓ: Cálculo de crédito exitoso con datos válidos\n")
+        print("    TC-003 PASÓ: Cálculo de crédito exitoso con datos válidos\n")
 
     def _soft_assert(self, condition, message, errors):
         if not condition:
             errors.append(message)
 
-    def test_tc002_rechazar_dato_incompleto(self):
+    def test_tc004_rechazar_dato_incompleto(self):
         """
-        TC-002: Rechazo por campo obligatorio faltante
+        TC-004: Rechazo por campo obligatorio faltante
         
         ENTRADA:
         - plazoCredito: 24 (presente)
@@ -159,7 +159,7 @@ class TestCalculateCredit(unittest.TestCase):
             "userID": self.guest_user_id
         }
         
-        print("\n>>> TC-002: Rechazar petición sin campo obligatorio (montoSimulacion)")
+        print("\n>>> TC-004: Rechazar petición sin campo obligatorio (montoSimulacion)")
         print(f"Payload enviado:\n{json.dumps(payload, indent=2)}\n")
         
         # Realizar petición POST
@@ -205,7 +205,7 @@ class TestCalculateCredit(unittest.TestCase):
         if errors:
             self.fail("\n".join(errors))
         
-        print("    TC-002 PASÓ: Petición rechazada correctamente por datos incompletos\n")
+        print("    TC-004 PASÓ: Petición rechazada correctamente por datos incompletos\n")
 
     @classmethod
     def tearDownClass(cls):

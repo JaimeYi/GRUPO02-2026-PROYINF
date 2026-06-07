@@ -6,6 +6,7 @@ const PaymentButton = () => {
     const [formData, setFormData] = useState({
             monto: 1
         });
+    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,6 +18,7 @@ const PaymentButton = () => {
 
     const handlePayment = async (e) => {
         e.preventDefault();
+        setError("");
 
         const orderData = {
             amount: formData.monto, // monto para probar
@@ -31,12 +33,17 @@ const PaymentButton = () => {
                 body: JSON.stringify(orderData)
             });
 
-            const data = await response.json();
+            if (!response.ok) {
+                const errResult = await response.json();
+                throw new Error(errResult.error || "Ocurrió un error al iniciar el pago.");
+            }
 
+            const data = await response.json();
             return autoSubmitForm(data.url, data.token);
 
         } catch (error) {
             console.error("Error iniciando pago", error);
+            setError(error.message || "Error de comunicación con el servidor de pagos.");
         }
     };
 
@@ -77,6 +84,7 @@ const PaymentButton = () => {
                     <button type="submit" className="hero-btn">
                         Pagar con Webpay
                     </button>
+                    {error && <p style={{ color: "red", marginTop: "15px" }}>{error}</p>}
                     </form>
                 </GlassPanel>
             </div>

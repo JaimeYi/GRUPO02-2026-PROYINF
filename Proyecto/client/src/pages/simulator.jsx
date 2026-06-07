@@ -233,22 +233,27 @@ function Simulator() {
     };
 
     const getSimulationHistory = useCallback(async () => {
-        const response = await fetch(
-            "http://localhost:5000/api/simulator/simulationHistory",
-            {
-                method: "GET",
-                credentials: "include",
+        try {
+            const response = await fetch(
+                "http://localhost:5000/api/simulator/simulationHistory",
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
+
+            const result = await response.json();
+            console.log(result);
+
+            if (!response.ok) {
+                throw new Error(result.error || "Ocurrió un error al obtener el historial de simulaciones.");
             }
-        );
 
-        const result = await response.json();
-        console.log(result);
-
-        if (!response.ok) {
-            throw new Error(result.error || "Ocurrió un error desconocido.");
+            setHistorySimulation(result);
+        } catch (error) {
+            console.error("Error fetching simulation history:", error);
+            setError(error.message || "Error al cargar el historial.");
         }
-
-        setHistorySimulation(result);
     }, []);
 
     const getSuggestedLoan = useCallback(async (isManualTrigger = false) => {

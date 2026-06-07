@@ -47,91 +47,106 @@ const guestSessionController = async (req, res) => {
 };
 
 const registerController = async (req, res) => {
-    const userData = req.body;
-    
-    if (userData.rut) {
-        userData.rut = formatRut(userData.rut);
-    }
+    try {
+        const userData = req.body;
+        
+        if (userData.rut) {
+            userData.rut = formatRut(userData.rut);
+        }
 
-    const returnRegister = await registerService(userData);
+        const returnRegister = await registerService(userData);
 
-    if (returnRegister === 4090) {
-        res.status(409).json({
-            error: "Este RUT ya se ha registrado anteriormente.",
-        });
-    } else if (returnRegister === 4091) {
-        res.status(409).json({
-            error: "Este correo electrónico ya se ha registrado anteriormente.",
-        });
-    } else if (returnRegister === 201) {
-        res.status(201).json({
-            message: "Usuario registrado satisfactoriamente",
-        });
-    } else if (returnRegister === 500) {
-        res.status(500).json({ error: "Ocurrio un error interno." });
+        if (returnRegister === 4090) {
+            return res.status(409).json({
+                error: "Este RUT ya se ha registrado anteriormente.",
+            });
+        } else if (returnRegister === 4091) {
+            return res.status(409).json({
+                error: "Este correo electrónico ya se ha registrado anteriormente.",
+            });
+        } else if (returnRegister === 201) {
+            return res.status(201).json({
+                message: "Usuario registrado satisfactoriamente",
+            });
+        } else if (returnRegister === 500) {
+            return res.status(500).json({ error: "Ocurrio un error interno." });
+        }
+    } catch (error) {
+        console.error("Error en registerController:", error);
+        return res.status(500).json({ error: "Ocurrio un error interno en el servidor." });
     }
 };
 
 const loginController = async (req, res) => {
-    let { rut, contrasena } = req.body;
-    
-    rut = formatRut(rut);
+    try {
+        let { rut, contrasena } = req.body;
+        
+        rut = formatRut(rut);
 
-    const cliente = await loginService(rut, contrasena);
+        const cliente = await loginService(rut, contrasena);
 
-    if (cliente === 401) {
-        res.status(401).json({
-            error: "Credenciales incorrectas.",
-        });
-    } else if (cliente === 500) {
-        res.status(500).json({
-            error: "Ocurrio un error inesperado.",
-        });
-    } else {
-        const payload = {
-            sessionId: cliente.rut,
-            rut: cliente.rut,
-            mail: cliente.correo,
-            name: cliente.nombre,
-            lastName: cliente.apellido,
-            userType: "cliente",
-        };
+        if (cliente === 401) {
+            return res.status(401).json({
+                error: "Credenciales incorrectas.",
+            });
+        } else if (cliente === 500) {
+            return res.status(500).json({
+                error: "Ocurrio un error inesperado.",
+            });
+        } else {
+            const payload = {
+                sessionId: cliente.rut,
+                rut: cliente.rut,
+                mail: cliente.correo,
+                name: cliente.nombre,
+                lastName: cliente.apellido,
+                userType: "cliente",
+            };
 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-        });
+            const token = jwt.sign(payload, process.env.JWT_SECRET, {
+                expiresIn: "1h",
+            });
 
-        res.cookie("guest_session", "", {
-            httpOnly: true,
-            expires: new Date(0),
-        });
+            res.cookie("guest_session", "", {
+                httpOnly: true,
+                expires: new Date(0),
+            });
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // Solo enviar por HTTPS en producción
-            maxAge: 3600000,
-        });
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // Solo enviar por HTTPS en producción
+                maxAge: 3600000,
+            });
 
-        res.status(200).json({
-            message: "Login exitoso",
-            name: cliente.nombre,
-            user: payload,
-        });
+            return res.status(200).json({
+                message: "Login exitoso",
+                name: cliente.nombre,
+                user: payload,
+            });
+        }
+    } catch (error) {
+        console.error("Error en loginController:", error);
+        return res.status(500).json({ error: "Ocurrio un error interno en el servidor." });
     }
 };
 
 const logoutController = (res) => {
-    res.cookie("token", "", {
-        httpOnly: true,
-        expires: new Date(0),
-    });
-    res.cookie("guest_session", "", {
-        httpOnly: true,
-        expires: new Date(0),
-    });
-    res.status(200).json({
-        message: "Sesión cerrada correctamente.",
-    });
+    try {
+        res.cookie("token", "", {
+            httpOnly: true,
+            expires: new Date(0),
+        });
+        res.cookie("guest_session", "", {
+            httpOnly: true,
+            expires: new Date(0),
+        });
+        return res.status(200).json({
+            message: "Sesión cerrada correctamente.",
+        });
+    } catch (error) {
+        console.error("Error en logoutController:", error);
+        return res.status(500).json({ error: "Error al cerrar sesión." });
+    }
 };
 
 const verifyController = (req, res) => {

@@ -15,10 +15,16 @@ getSalaryPDF = (async (req, res) => {
     try {
         // En caso de que Gemini devuelva backticks de markdown (ej: ```json ... ```), los limpiamos
         const cleanedResult = aiCallResult.replace(/```json/g, "").replace(/```/g, "").trim();
-        aiCallResult = JSON.parse(cleanedResult);
+        const parsedResult = JSON.parse(cleanedResult);
+        
+        if (parsedResult.seguridad_aprobada === false) {
+            return res.status(400).json({ 
+                error: "El archivo PDF contiene textos no permitidos o sospechosos (posible inyección de prompts)." 
+            });
+        }
         
         // Retornamos el JSON extraído directamente al cliente
-        return res.json(aiCallResult);
+        return res.json(parsedResult);
     } catch (e) {
         console.error("Error parseando JSON de Gemini:", e);
         return res.status(500).json({error: "Error al interpretar la respuesta del PDF."});

@@ -168,6 +168,9 @@ function Register() {
                                     onChange={handleFileUpload}
                                     ref={fileInputRef}
                                 />
+                                {error && !pdfUploaded && (
+                                    <p style={{ color: "red", marginTop: "10px", fontWeight: "bold" }}>{error}</p>
+                                )}
                             </div>
 
                             {pdfUploaded && (
@@ -185,8 +188,6 @@ function Register() {
                                         onChange={handleChange}
                                         maxLength={10}
                                         placeholder="12345678-K"
-                                        readOnly={readOnlyFields.rut}
-                                        style={{ backgroundColor: readOnlyFields.rut ? "#e9ecef" : "white" }}
                                         required
                                     />
 
@@ -198,8 +199,6 @@ function Register() {
                                         value={formData.nombre}
                                         onChange={handleChange}
                                         placeholder="Juan Ignacio Pérez Rodriguez"
-                                        readOnly={readOnlyFields.nombre}
-                                        style={{ backgroundColor: readOnlyFields.nombre ? "#e9ecef" : "white" }}
                                         required
                                     />
 
@@ -211,8 +210,6 @@ function Register() {
                                         value={formData.ingresoLiquido}
                                         onChange={handleChange}
                                         placeholder="1000000"
-                                        readOnly={readOnlyFields.ingresoLiquido}
-                                        style={{ backgroundColor: readOnlyFields.ingresoLiquido ? "#e9ecef" : "white" }}
                                         required
                                     />
 
@@ -224,8 +221,6 @@ function Register() {
                                         value={formData.direccion}
                                         onChange={handleChange}
                                         placeholder="Av. Vicuña Mackenna 3939"
-                                        readOnly={readOnlyFields.direccion}
-                                        style={{ backgroundColor: readOnlyFields.direccion ? "#e9ecef" : "white" }}
                                         required
                                     />
 
@@ -237,8 +232,6 @@ function Register() {
                                         value={formData.telefono}
                                         onChange={handleChange}
                                         placeholder="+56912345678"
-                                        readOnly={readOnlyFields.telefono}
-                                        style={{ backgroundColor: readOnlyFields.telefono ? "#e9ecef" : "white" }}
                                         required
                                     />
 

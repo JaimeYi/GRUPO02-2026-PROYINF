@@ -40,7 +40,7 @@ En cumplimiento con las directrices de mejora continua de las Historias de Usuar
 ***
 ## 3. Resultados de la Re-inspección de Código
 
-Una vez implementadas las refactorizaciones en la infraestructura de contenedores (`Dockerfile`) y en la configuración del middleware de carga de archivos (`iaHelper.routes.js`), se incorporó la nueva versión del código a la plataforma principal mediante control de versiones. Posteriormente, se ejecutó una re-inspección estática en SonarCloud para verificar la resolución de los defectos.
+Una vez implementadas las refactorizaciones en la infraestructura de contenedores (`Dockerfile`) y en la configuración del middleware de carga de archivos (`iaHelper.routes.js`), se incorporó la nueva versión del código a la plataforma principal. Posteriormente, se ejecutó una re-inspección estática en SonarCloud para verificar la resolución de los defectos.
 
 ### 3.1 Cierre de Quality Issues Seleccionados
 

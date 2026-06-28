@@ -8,7 +8,7 @@ const uploadPath = path.join(__dirname, "../uploads")
 const router = Router();
 const upload = multer({
     dest: uploadPath,
-    limits: { fileSize: 8 * 1024 * 1024 } 
+    limits: { fileSize: 6 * 1024 * 1024 } 
 })
 
 router.post("/api/pdfParser", upload.single('pdfFile'), (req, res) => {

@@ -37,3 +37,29 @@ En cumplimiento con las directrices de mejora continua de las Historias de Usuar
 1. **Abordaje de Quality Issue 1 (Aprobado):** Se solucionará creando un archivo `.dockerignore` en la raíz del servidor para excluir explícitamente carpetas temporales y archivos secretos (`.env`, `node_modules`), garantizando una construcción limpia y segura.
 2. **Abordaje de Quality Issue 2 (Aprobado):** Se solucionará configurando explícitamente el parámetro `limit` en el middleware analizador de cuerpos de Express (ej. `express.json({ limit: '10mb' })`), mitigando vectores de ataque de denegación de servicio.
 3. **Advertencias Menores no abordadas:** Se descarta invertir tiempo de ciclo en corregir advertencias de registro en consola (*Change this code to not log user-controlled data*) presentes en el frontend web (`register.js`, `simulator.jsx`), catalogadas con severidad *Minor*. La justificación radica en priorizar la estabilidad del backend y la ejecución de pruebas de carga en JMeter.
+***
+## 3. Resultados de la Re-inspección de Código
+
+Una vez implementadas las refactorizaciones en la infraestructura de contenedores (`Dockerfile`) y en la configuración del middleware de carga de archivos (`iaHelper.routes.js`), se incorporó la nueva versión del código a la plataforma principal mediante control de versiones. Posteriormente, se ejecutó una re-inspección estática en SonarCloud para verificar la resolución de los defectos.
+
+### 3.1 Cierre de Quality Issues Seleccionados
+
+La verificación automatizada confirmó que los dos hallazgos catalogados con severidad *Critical* y *Major* fueron resueltos de manera exitosa, reduciendo las brechas de seguridad del sistema e impactando positivamente las métricas generales del repositorio.
+
+* **Evidencia de Resolución:**
+  ![Issues Corregidos](./fixed_issues.png)
+
+### 3.2 Superación del Quality Gate
+
+Como resultado directo del mejoramiento del código, el estado global de evaluación del proyecto experimentó una transición positiva, cumpliendo con los estándares de calidad definidos por la plataforma.
+
+* **Registro de Actividad y Transición de Estado:**
+  ![Transición Quality Gate](./activity.png)
+
+---
+
+## 4. Conclusión de la Inspección
+
+El ciclo de auditoría mediante SonarCloud se concluye satisfactoriamente. El uso de la herramienta permitió identificar un riesgo crítico de fuga de datos en el entorno de construcción y un vector de denegación de servicio en las rutas de Inteligencia Artificial.
+
+Al aplicar remediaciones precisas y versionar los artefactos resultantes en el directorio `inspections/`, podemos garantizar la entrega de una solución final más segura, robusta y alineada con los requisitos arquitectónicos del cliente.

@@ -5,7 +5,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-COPY . .
+COPY index.js ./
+COPY src ./src
 
 # Instalar wait-port globalmente
 RUN npm install -g wait-port
